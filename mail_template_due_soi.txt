@@ -1,0 +1,16 @@
+---
+{quote_text} {quote_author}
+---
+
+Hallo {victim_name},
+Darf ich Dich daran erinnern, dass Du noch folgende Aufgabe erledigen solltest:
+
+ -> {name}, zu erledigen bis {due_date}.
+
+Wenn Du die Aufgabe erledigt hast, sende eine Email an {control_address} mit `!done {slug}`.
+
+Gruss,
+Benjamin
+
+---
+Dieses Mail wurde automatisch generiert. Feedback zu Pushr wird gerne unter {feedback_address} entgegengenommen.

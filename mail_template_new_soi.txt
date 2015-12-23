@@ -1,0 +1,12 @@
+Hallo {victim_name},
+Es wurde eine neue Aufgabe für Dich erfasst:
+
+ -> {name}, zu erledigen bis {due_date}.
+
+Wenn Du die Aufgabe erledigt hast, sende eine Email an {control_address} mit `!done {slug}`.
+
+Gruss,
+Benjamin
+
+---
+Dieses Mail wurde automatisch generiert. Feedback zu Pushr wird gerne unter {feedback_address} entgegengenommen.

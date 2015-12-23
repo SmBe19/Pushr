@@ -2,6 +2,7 @@
 
 from pushr_settings import PUSHR_SETTINGS
 from pushr_db_tasks import Task_DB
+from pushr_mail_markov import Markov, MarkovFileTemplateMailFormatter
 from pushr_mail_handler import handle_mail
 from pushr_mail import Mail, FileTemplateMailFormatter
 
@@ -56,13 +57,15 @@ def itemlist(args):
             tasks = db.get_undone_tasks()
         elif listname == "done":
             tasks = db.get_done_tasks()
+        else:
+            print("unknown listname '" + args.itemlist + "'")
         items = ["{slug} ({victim_name} / {due_date}): {name}".format(**task) for task in tasks]
     for item in items:
         print(item)
 
 def mail(args):
     db = Task_DB()
-    mailsender = Mail(FileTemplateMailFormatter(PUSHR_SETTINGS["mail_subject_due"], PUSHR_SETTINGS["template_file_due"], PUSHR_SETTINGS["mail_subject_new"], PUSHR_SETTINGS["template_file_new"]))
+    mailsender = Mail(MarkovFileTemplateMailFormatter(PUSHR_SETTINGS["mail_subject_due"], PUSHR_SETTINGS["template_file_due"], PUSHR_SETTINGS["mail_subject_new"], PUSHR_SETTINGS["template_file_new"]))
     action = args.action.lower()
     tasks = []
 
@@ -74,6 +77,8 @@ def mail(args):
         tasks = db.get_need_tasks()
     elif action == "undone":
         tasks = db.get_undone_tasks()
+    else:
+        print("unknown action '" + args.action + "'")
 
     mailsender.send_mails(tasks)
     for task in tasks:
@@ -81,6 +86,20 @@ def mail(args):
 
 def handle(args):
     handle_mail()
+
+def markov(args):
+    markov = Markov(args.markov_type)
+    action = args.action.lower()
+
+    if action == "analyze":
+        if args.file is None:
+            markov.analyze_stdio()
+        else:
+            markov.analyze_file(args.file)
+    elif action == "generate":
+        print(markov.generate_text())
+    else:
+        print("unknown action '" + args.action + "'")
 
 def nothing(args):
     print("missing arguments. Call --help")
@@ -120,6 +139,12 @@ def main():
 
     handle_parser = subparsers.add_parser("handle", help="handle an incomming mail")
     handle_parser.set_defaults(func=handle)
+
+    markov_parser = subparsers.add_parser("markov", help="control markov engine")
+    markov_parser.add_argument("markov_type", help="name of the markov type (default: quote_text / quote_author)")
+    markov_parser.add_argument("action", help="action to perform (analyze / generate)")
+    markov_parser.add_argument("file", help="file to analyze", nargs="?", default=None)
+    markov_parser.set_defaults(func=markov)
 
     args = parser.parse_args()
     args.func(args)

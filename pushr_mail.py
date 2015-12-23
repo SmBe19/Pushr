@@ -1,7 +1,7 @@
 from pushr_settings import PUSHR_SETTINGS
 from pushr_mail_util import send_mail
 
-class TemplateMailFormatter():
+class TemplateMailFormatter:
 
     def __init__(self, subject_due, body_due, subject_new, body_new):
         self.subject_due = subject_due
