@@ -6,7 +6,27 @@ PUSHR_SETTINGS["debug_mode"] = False
 
 PUSHR_SETTINGS["sender_name"] = "Pushr"
 PUSHR_SETTINGS["sender_mail"] = "me@example.com"
-PUSHR_SETTINGS["template_enrich"] = {"control_address": "control@example.com", "feedback_address": "feedback@example.com"}
+PUSHR_SETTINGS["template_enrich"] = {
+    "control_address": "control@example.com",
+    "feedback_address": "feedback@example.com"
+}
+
+PUSHR_SETTINGS["quote_text_markov_type"] = "quote_text"
+PUSHR_SETTINGS["quote_author_markov_type"] = "quote_author"
+PUSHR_SETTINGS["markov_type"] = {
+    "quote_text": {
+        "separator": " ",
+        "prefix": 1,
+        "length": 20,
+        "endchars": ['.', '!', '?']
+    },
+    "quote_author": {
+        "separator": "",
+        "prefix": 1,
+        "length": 5,
+        "endchars": [' ']
+    }
+}
 
 PUSHR_SETTINGS["template_file_due"] = "mail_template_due.txt"
 PUSHR_SETTINGS["template_file_new"] = "mail_template_new.txt"
