@@ -36,6 +36,26 @@ def chtask(args):
     else:
         print("unknown action '" + args.action + "'")
 
+def itemlist(args):
+    db = Task_DB()
+    listname = args.itemlist.lower()
+    items = []
+    if listname == "admin":
+        items = db.get_admins()
+    else:
+        tasks = []
+        if listname == "new":
+            tasks = db.get_new_tasks()
+        elif listname == "due":
+            tasks = db.get_due_tasks()
+        elif listname == "undone":
+            tasks = db.get_undone_tasks()
+        elif listname == "done":
+            tasks = db.get_done_tasks()
+        items = ["{slug} ({victim_name} / {due_date}): {name}".format(**task) for task in tasks]
+    for item in items:
+        print(item)
+
 def mail(args):
     db = Task_DB()
     mailsender = Mail(FileTemplateMailFormatter(PUSHR_SETTINGS["mail_subject_due"], PUSHR_SETTINGS["template_file_due"], PUSHR_SETTINGS["mail_subject_new"], PUSHR_SETTINGS["template_file_new"]))
@@ -59,7 +79,7 @@ def handle(args):
     with open("test.txt", "w") as f:
         try:
             while True:
-                f.write(input())
+                f.write(input() + "\n")
         except EOFError:
             pass
 
@@ -88,6 +108,10 @@ def main():
     chtask_parser.add_argument("action", help="action to perform (done / undone)")
     chtask_parser.add_argument("slug", help="slug of task to perform action on")
     chtask_parser.set_defaults(func=chtask)
+
+    itemlist_parser = subparsers.add_parser("list", help="list items")
+    itemlist_parser.add_argument("itemlist", help="which items to list (admin / new / due / undone / done)")
+    itemlist_parser.set_defaults(func=itemlist)
 
     mail_parser = subparsers.add_parser("mail", help="send mails")
     mail_parser.add_argument("action", help="action to perform (new / due / need / undone)")

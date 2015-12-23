@@ -6,6 +6,7 @@ expression_get_new_tasks = "SELECT slug, victim_name, victim_mail, name, due_dat
 expression_get_due_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE date(due_date) <= date('now') AND done = 0"
 expression_get_need_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE (date(due_date) <= date('now') OR sent_mails = 0) AND done = 0"
 expression_get_undone_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE done = 0"
+expression_get_done_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE done != 0"
 expression_get_task = "SELECT slug, victim_name, victim_mail, name, due_date FROM tasks WHERE slug = ?"
 
 expression_insert_task = "INSERT INTO tasks (slug, victim_name, victim_mail, name, due_date, sent_mails, done) VALUES (?, ?, ?, ?, ?, 0, 0)"
@@ -16,6 +17,7 @@ expression_set_undone = "UPDATE tasks SET done = 0 WHERE slug = ?"
 expression_add_admin = "INSERT INTO admins (mail) VALUES (?)"
 expression_remove_admin = "DELETE FROM admins WHERE mail = ?"
 expression_get_admin = "SELECT mail FROM admins WHERE mail = ?"
+expression_get_admins = "SELECT mail FROM admins"
 
 class Task_DB:
 
@@ -76,6 +78,9 @@ class Task_DB:
     def get_undone_tasks(self):
         return self.get_tasks(expression_get_undone_tasks)
 
+    def get_done_tasks(self):
+        return self.get_tasks(expression_get_done_tasks)
+
     def get_task(self, slug):
         c = self.db.cursor()
         c.execute(expression_get_task, (slug,))
@@ -100,6 +105,13 @@ class Task_DB:
         c = self.db.cursor()
         c.execute(expression_get_admin, (mail,))
         return c.fetchone() is not None
+
+    def get_admins(self):
+        c = self.db.cursor()
+        c.execute(expression_get_admins)
+
+        admins = [row[0] for row in c]
+        return admins
 
     def commit(self):
         self.db.commit()
