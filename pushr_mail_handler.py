@@ -12,7 +12,7 @@ def handle_mail():
     is_admin = False
     try:
         while True:
-            line = input().trim()
+            line = input().strip()
             if from_address is None:
                 match = RE_FROM_ADDRESS.match(line)
                 if match:

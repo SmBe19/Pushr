@@ -6,6 +6,7 @@ from pushr_mail_handler import handle_mail
 from pushr_mail import Mail, FileTemplateMailFormatter
 
 import argparse
+import os
 
 def admin(args):
     db = Task_DB()
@@ -49,6 +50,8 @@ def itemlist(args):
             tasks = db.get_new_tasks()
         elif listname == "due":
             tasks = db.get_due_tasks()
+        elif listname == "need":
+            tasks = db.get_need_tasks()
         elif listname == "undone":
             tasks = db.get_undone_tasks()
         elif listname == "done":
@@ -83,6 +86,8 @@ def nothing(args):
     print("missing arguments. Call --help")
 
 def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     parser = argparse.ArgumentParser(description="send push mails")
     subparsers = parser.add_subparsers(help="sub-command help")
     parser.set_defaults(func=nothing)
@@ -106,7 +111,7 @@ def main():
     chtask_parser.set_defaults(func=chtask)
 
     itemlist_parser = subparsers.add_parser("list", help="list items")
-    itemlist_parser.add_argument("itemlist", help="which items to list (admin / new / due / undone / done)")
+    itemlist_parser.add_argument("itemlist", help="which items to list (admin / new / need / due / undone / done)")
     itemlist_parser.set_defaults(func=itemlist)
 
     mail_parser = subparsers.add_parser("mail", help="send mails")

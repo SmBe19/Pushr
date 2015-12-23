@@ -50,11 +50,11 @@ class Task_DB:
 
     def set_done(self, slug):
         self.db.execute(expression_set_done, (slug,))
-        self.db.execute
+        self.db.commit()
 
     def set_undone(self, slug):
         self.db.execute(expression_set_undone, (slug,))
-        self.db.execute
+        self.db.commit()
 
     def get_tasks(self, expression):
         c = self.db.cursor()
