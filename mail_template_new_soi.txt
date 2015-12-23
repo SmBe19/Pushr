@@ -1,5 +1,5 @@
 Hallo {victim_name},
-Es wurde eine neue Aufgabe für Dich erfasst:
+Es wurde eine neue Aufgabe fuer Dich erfasst:
 
  -> {name}, zu erledigen bis {due_date}.
 
