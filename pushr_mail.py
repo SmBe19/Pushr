@@ -41,5 +41,5 @@ class Mail:
             if formatted is None:
                 continue
             if not PUSHR_SETTINGS["debug_mode"]:
-                send_mail(task["victim_name"], task["victim_mail"], formatted[0], formatted[1])
+                send_mail(task["victim_name"], task["victim_mail"], PUSHR_SETTINGS["mail_blind_copy"], formatted[0], formatted[1])
             print("Sent mail to '{victim_name} <{victim_mail}>' for task '{name}' ({slug})".format(**task))

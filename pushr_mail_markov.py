@@ -88,7 +88,7 @@ class Markov:
     def analyze_file(self, file_name):
         with open(file_name, "r") as f:
             for line in f:
-                self.analyze(line, do_commit=False)
+                self.analyze(line.strip(), do_commit=False)
         self.db.commit()
 
     def analyze_stdio(self):
