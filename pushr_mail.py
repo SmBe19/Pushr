@@ -14,6 +14,7 @@ class TemplateMailFormatter():
 
     def format_mail(self, task):
         task = self.enrich_task(task)
+        task.update(PUSHR_SETTINGS["template_enrich"])
         if task["sent_mails"] > 0:
             return (self.subject_due.format(**task), self.body_due.format(**task))
         else:

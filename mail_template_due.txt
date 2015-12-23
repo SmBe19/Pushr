@@ -1,4 +1,4 @@
 Hi {victim_name},
-I'm happy to inform you that you have a pending task: {name}, due {due_date}. When you finished this task, send an email to example@example.org with "done {slug}"
+I'm happy to inform you that you have a pending task: {name}, due {due_date}. When you finished this task, send an email to {control_address} with "!done {slug}"
 Cheers,
 Pushr

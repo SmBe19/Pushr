@@ -6,6 +6,7 @@ PUSHR_SETTINGS["debug_mode"] = False
 
 PUSHR_SETTINGS["sender_name"] = "Pushr"
 PUSHR_SETTINGS["sender_mail"] = "me@example.com"
+PUSHR_SETTINGS["template_enrich"] = {"control_address": "control@example.com"}
 
 PUSHR_SETTINGS["template_file_due"] = "mail_template_due.txt"
 PUSHR_SETTINGS["template_file_new"] = "mail_template_new.txt"
