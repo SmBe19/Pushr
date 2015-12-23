@@ -2,6 +2,7 @@
 
 from pushr_settings import PUSHR_SETTINGS
 from pushr_db_tasks import Task_DB
+from pushr_mail_handler import handle_mail
 from pushr_mail import Mail, FileTemplateMailFormatter
 
 import argparse
@@ -76,12 +77,7 @@ def mail(args):
         db.add_sent_mail(task["slug"])
 
 def handle(args):
-    with open("test.txt", "w") as f:
-        try:
-            while True:
-                f.write(input() + "\n")
-        except EOFError:
-            pass
+    handle_mail()
 
 def nothing(args):
     print("missing arguments. Call --help")
