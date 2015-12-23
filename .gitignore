@@ -1,2 +1,3 @@
 pushr_settings.py
 __pycache__
+*.db

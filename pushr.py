@@ -9,10 +9,14 @@ import argparse
 def admin(args):
     db = Task_DB()
     action = args.action.lower()
-    if(action == "add"):
+    if action == "add":
         res = db.add_admin(args.mail)
         if not res:
             print("Admin not added!")
+    elif action == "remove":
+        res = db.remove_admin(args.mail)
+        if not res:
+            print("Admin not removed!")
     else:
         print("unknown action '" + args.action + "'")
 
@@ -25,9 +29,9 @@ def addtask(args):
 def chtask(args):
     db = Task_DB()
     action = args.action.lower()
-    if(action == "done"):
+    if action == "done":
         db.set_done(args.slug)
-    elif(action == "undone"):
+    elif action == "undone":
         db.set_undone(args.slug)
     else:
         print("unknown action '" + args.action + "'")
@@ -38,13 +42,13 @@ def mail(args):
     action = args.action.lower()
     tasks = []
 
-    if(action == "new"):
+    if action == "new":
         tasks = db.get_new_tasks()
-    elif(action == "due"):
+    elif action == "due":
         tasks = db.get_due_tasks()
-    elif(action == "need"):
+    elif action == "need":
         tasks = db.get_need_tasks()
-    elif(action == "undone"):
+    elif action == "undone":
         tasks = db.get_undone_tasks()
 
     mailsender.send_mails(tasks)

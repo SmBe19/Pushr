@@ -14,6 +14,7 @@ expression_set_done = "UPDATE tasks SET done = 1 WHERE slug = ?"
 expression_set_undone = "UPDATE tasks SET done = 0 WHERE slug = ?"
 
 expression_add_admin = "INSERT INTO admins (mail) VALUES (?)"
+expression_remove_admin = "DELETE FROM admins WHERE mail = ?"
 expression_get_admin = "SELECT mail FROM admins WHERE mail = ?"
 
 class Task_DB:
@@ -85,6 +86,13 @@ class Task_DB:
         if self.is_admin(mail):
             return False
         self.db.execute(expression_add_admin, (mail,))
+        self.db.commit()
+        return True
+
+    def remove_admin(self, mail):
+        if not self.is_admin(mail):
+            return False
+        self.db.execute(expression_remove_admin, (mail,))
         self.db.commit()
         return True
 
