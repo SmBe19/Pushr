@@ -1,5 +1,5 @@
 ---
-{quote_text} {quote_author}
+{quote_text} --{quote_author}
 ---
 
 Hallo {victim_name},

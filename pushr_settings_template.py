@@ -23,7 +23,7 @@ PUSHR_SETTINGS["markov_type"] = {
     "quote_author": {
         "separator": "",
         "prefix": 1,
-        "length": 5,
+        "length": 10,
         "endchars": [' ']
     }
 }
