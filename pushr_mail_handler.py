@@ -4,7 +4,7 @@ import re
 import shlex
 
 RE_FROM_ADDRESS = re.compile(r"From: (?:.*? <(\S+@\S+.\S+)>|(\S+@\S+.\S+))")
-RE_ACTION = re.compile(".*?!(done|undone|add|addadmin|removeadmin) (.*)")
+RE_ACTION = re.compile(r".*?!(done|undone|add|addadmin|removeadmin) (.*)")
 
 def handle_mail():
     db = Task_DB()
@@ -18,7 +18,7 @@ def handle_mail():
                 if match:
                     from_address = match.group(1) if match.group(1) is not None else match.group(2)
                     is_admin = db.is_admin(from_address)
-            match = RE_ACTION.match(line.lower())
+            match = RE_ACTION.match(line.lower(), re.IGNORECASE)
             if match:
                 action = match.group(1).lower()
                 args = shlex.split(match.group(2))
