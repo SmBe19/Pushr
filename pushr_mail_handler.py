@@ -18,7 +18,7 @@ def handle_mail():
                 if match:
                     from_address = match.group(1) if match.group(1) is not None else match.group(2)
                     is_admin = db.is_admin(from_address)
-            match = RE_ACTION.match(line.lower(), re.IGNORECASE)
+            match = RE_ACTION.match(line)
             if match:
                 action = match.group(1).lower()
                 args = shlex.split(match.group(2))
