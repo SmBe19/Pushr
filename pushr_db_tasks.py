@@ -38,22 +38,22 @@ class Task_DB:
         self.db.commit()
 
     def add_task(self, slug, victim_name, victim_mail, name, due_date):
-        if self.get_task(slug) is not None:
+        if self.get_task(slug.lower()) is not None:
             return False
-        self.db.execute(expression_insert_task, (slug, victim_name, victim_mail, name, due_date))
+        self.db.execute(expression_insert_task, (slug.lower(), victim_name, victim_mail, name, due_date))
         self.db.commit()
         return True
 
     def add_sent_mail(self, slug):
-        self.db.execute(expression_add_sent_mail, (slug,))
+        self.db.execute(expression_add_sent_mail, (slug.lower(),))
         self.db.commit()
 
     def set_done(self, slug):
-        self.db.execute(expression_set_done, (slug,))
+        self.db.execute(expression_set_done, (slug.lower(),))
         self.db.commit()
 
     def set_undone(self, slug):
-        self.db.execute(expression_set_undone, (slug,))
+        self.db.execute(expression_set_undone, (slug.lower(),))
         self.db.commit()
 
     def get_tasks(self, expression):
@@ -83,7 +83,7 @@ class Task_DB:
 
     def get_task(self, slug):
         c = self.db.cursor()
-        c.execute(expression_get_task, (slug,))
+        c.execute(expression_get_task, (slug.lower(),))
 
         return c.fetchone()
 
@@ -120,4 +120,4 @@ class Task_DB:
         self.db.close()
 
     def create_task (self, slug, victim_name, victim_mail, name, due_date, sent_mails):
-        return {"slug": slug, "victim_name": victim_name, "victim_mail": victim_mail, "name": name, "due_date": due_date, "sent_mails": sent_mails}
+        return {"slug": slug.lower(), "victim_name": victim_name, "victim_mail": victim_mail, "name": name, "due_date": due_date, "sent_mails": sent_mails}
