@@ -18,25 +18,24 @@ def handle_mail():
                 if match:
                     from_address = match.group(1) if match.group(1) is not None else match.group(2)
                     is_admin = db.is_admin(from_address)
-            else:
-                match = RE_ACTION.match(line.lower())
-                if match:
-                    action = match.group(1).lower()
-                    args = shlex.split(match.group(2))
-                    if action == "done":
-                        if len(args) >= 1:
-                            db.set_done(args[0])
-                    elif action == "undone":
-                        if len(args) >= 1:
-                            db.set_undone(args[0])
-                    elif action == "add":
-                        if is_admin and len(args) >= 5:
-                            db.add_task(args[0], args[1], args[2], args[3], args[4])
-                    elif action == "addadmin":
-                        if is_admin and len(args) >= 1:
-                            db.add_admin(args[0])
-                    elif action == "removeadmin":
-                        if is_admin and len(args) >= 1:
-                            db.remove_admin(args[0])
+            match = RE_ACTION.match(line.lower())
+            if match:
+                action = match.group(1).lower()
+                args = shlex.split(match.group(2))
+                if action == "done":
+                    if len(args) >= 1:
+                        db.set_done(args[0])
+                elif action == "undone":
+                    if len(args) >= 1:
+                        db.set_undone(args[0])
+                elif action == "add":
+                    if is_admin and len(args) >= 5:
+                        db.add_task(args[0], args[1], args[2], args[3], args[4])
+                elif action == "addadmin":
+                    if is_admin and len(args) >= 1:
+                        db.add_admin(args[0])
+                elif action == "removeadmin":
+                    if is_admin and len(args) >= 1:
+                        db.remove_admin(args[0])
     except EOFError:
         pass
