@@ -16,7 +16,7 @@ def handle_mail():
             if from_address is None:
                 match = RE_FROM_ADDRESS.match(line)
                 if match:
-                    from_address = match.group(1) if match.group(1) is not None else match.group(2)
+                    from_address = match.group(1) or match.group(2)
                     is_admin = db.is_admin(from_address)
             match = RE_ACTION.match(line)
             if match:
@@ -29,8 +29,8 @@ def handle_mail():
                     if len(args) >= 1:
                         db.set_undone(args[0])
                 elif action == "add":
-                    if is_admin and len(args) >= 5:
-                        db.add_task(args[0], args[1], args[2], args[3], args[4])
+                    if is_admin and len(args) >= 4:
+                        db.add_task(args[0], args[1], args[2], args[3])
                 elif action == "addadmin":
                     if is_admin and len(args) >= 1:
                         db.add_admin(args[0])

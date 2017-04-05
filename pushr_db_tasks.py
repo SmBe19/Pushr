@@ -2,6 +2,8 @@ from pushr_settings import PUSHR_SETTINGS
 import sqlite3
 import os
 import datetime
+import random
+import string
 
 expression_get_new_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE sent_mails = 0 AND done = 0"
 expression_get_due_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE date(due_date) <= date('now') AND done = 0"
@@ -41,11 +43,13 @@ class Task_DB:
 
         self.db.commit()
 
-    def add_task(self, slug, victim_name, victim_mail, name, due_date):
+    def add_task(self, victim_name, victim_mail, name, due_date, slug=None):
         if not self.check_date(due_date):
             return False
         if self.get_task(slug) is not None:
             return False
+        if not slug:
+            slug = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(PUSHR_SETTINGS["slug_length"]))
         self.db.execute(expression_insert_task, (slug, victim_name, victim_mail, name, due_date))
         self.db.commit()
         return True

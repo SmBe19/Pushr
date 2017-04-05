@@ -8,8 +8,6 @@ from pushr_mail import Mail, FileTemplateMailFormatter
 
 import argparse
 import os
-import random
-import string
 
 def admin(args):
     db = Task_DB()
@@ -26,7 +24,6 @@ def admin(args):
         print("unknown action '" + args.action + "'")
 
 def addtask(args):
-    slug = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(PUSHR_SETTINGS["slug_length"]))
     db = Task_DB()
     res = db.add_task(slug, args.victim_name, args.victim_mail, args.name, args.due_date)
     if not res:
@@ -123,7 +120,7 @@ def main():
     parser.set_defaults(func=nothing)
 
     admin_parser = subparsers.add_parser("admin", help="admin management")
-    admin_parser.add_argument("action", help="action to perform (add)")
+    admin_parser.add_argument("action", help="action to perform (add / remove)")
     admin_parser.add_argument("mail", help="mail to perform action on")
     admin_parser.set_defaults(func=admin)
 
