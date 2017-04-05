@@ -36,10 +36,18 @@ class Mail:
         self.mail_formatter = mail_formatter
 
     def send_mails(self, tasks):
+        sent = []
         for task in tasks:
             formatted = self.mail_formatter.format_mail(task)
             if formatted is None:
                 continue
-            if not PUSHR_SETTINGS["debug_mode"]:
-                send_mail(task["victim_name"], task["victim_mail"], PUSHR_SETTINGS["mail_blind_copy"], formatted[0], formatted[1])
-            print("Sent mail to '{victim_name} <{victim_mail}>' for task '{name}' ({slug})".format(**task))
+            try:
+                if not PUSHR_SETTINGS["debug_mode"]:
+                    send_mail(task["victim_name"], task["victim_mail"], PUSHR_SETTINGS["mail_blind_copy"], formatted[0], formatted[1])
+            except Exception as e:
+                print("Error while sending mail to '{victim_name} <{victim_mail}>' for task '{name}' ({slug}):".format(**task), e)
+                raise
+            else:
+                print("Sent mail to '{victim_name} <{victim_mail}>' for task '{name}' ({slug})".format(**task))
+                sent.append(task)
+        return sent

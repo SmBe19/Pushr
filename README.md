@@ -12,6 +12,6 @@ Write an email to the control address with one of the following commands:
 
 - `!done slug`: mark the task with slug `slug` as done
 - `!undone slug`: mark the task with slug `slug` as undone
-- `!add slug victim_name victim_mail name due_date`: add a new task with the given values (`due_date` has to be formatted as follows: `YYYY-MM-DD`). This action needs admin privileges.
+- `!add victim_name victim_mail name due_date`: add a new task with the given values (`due_date` has to be formatted as follows: `YYYY-MM-DD`). This action needs admin privileges.
 - `!addadmin mail`: Add the given mail as admin. This action needs admin privileges.
 - `!removeadmin mail`: Remove the given mail from the admin list. This action needs admin privileges.

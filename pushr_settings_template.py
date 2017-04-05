@@ -4,9 +4,12 @@ PUSHR_SETTINGS = {}
 
 PUSHR_SETTINGS["debug_mode"] = False
 
+PUSHR_SETTINGS["slug_length"] = 8
+
 PUSHR_SETTINGS["sender_name"] = "Pushr"
 PUSHR_SETTINGS["sender_mail"] = "me@example.com"
 PUSHR_SETTINGS["mail_blind_copy"] = ["archive@example.com"]
+PUSHR_SETTINGS["message_id_domain"] = "example.com"
 PUSHR_SETTINGS["template_enrich"] = {
     "control_address": "control@example.com",
     "feedback_address": "feedback@example.com"

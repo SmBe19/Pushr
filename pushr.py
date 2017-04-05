@@ -8,6 +8,8 @@ from pushr_mail import Mail, FileTemplateMailFormatter
 
 import argparse
 import os
+import random
+import string
 
 def admin(args):
     db = Task_DB()
@@ -24,8 +26,9 @@ def admin(args):
         print("unknown action '" + args.action + "'")
 
 def addtask(args):
+    slug = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(PUSHR_SETTINGS["slug_length"]))
     db = Task_DB()
-    res = db.add_task(args.slug, args.victim_name, args.victim_mail, args.name, args.due_date)
+    res = db.add_task(slug, args.victim_name, args.victim_mail, args.name, args.due_date)
     if not res:
         print("Task not added!")
 
@@ -33,9 +36,17 @@ def chtask(args):
     db = Task_DB()
     action = args.action.lower()
     if action == "done":
-        db.set_done(args.slug)
+        if not db.set_done(args.slug):
+            print("invalid slug")
     elif action == "undone":
-        db.set_undone(args.slug)
+        if not db.set_undone(args.slug):
+            print("invalid slug")
+    elif action == "due_date":
+        if len(args.args) != 1:
+            print("Expected exactly one argument: due_date")
+        else:
+            if not db.set_due_date(args.slug, args.args[0]):
+                print("Invalid date or invalid slug")
     else:
         print("unknown action '" + args.action + "'")
 
@@ -80,8 +91,8 @@ def mail(args):
     else:
         print("unknown action '" + args.action + "'")
 
-    mailsender.send_mails(tasks)
-    for task in tasks:
+    sent = mailsender.send_mails(tasks)
+    for task in sent:
         db.add_sent_mail(task["slug"])
 
 def handle(args):
@@ -117,7 +128,6 @@ def main():
     admin_parser.set_defaults(func=admin)
 
     task_parser = subparsers.add_parser("addtask", help="add task")
-    task_parser.add_argument("slug", help="slug of the task")
     task_parser.add_argument("victim_name", help="name of the victim")
     task_parser.add_argument("victim_mail", help="mail of the victim")
     task_parser.add_argument("name", help="name of the task")
@@ -125,8 +135,9 @@ def main():
     task_parser.set_defaults(func=addtask)
 
     chtask_parser = subparsers.add_parser("chtask", help="task management")
-    chtask_parser.add_argument("action", help="action to perform (done / undone)")
+    chtask_parser.add_argument("action", help="action to perform (done / undone / due_date)")
     chtask_parser.add_argument("slug", help="slug of task to perform action on")
+    chtask_parser.add_argument("args", nargs="*", help="additional arguments")
     chtask_parser.set_defaults(func=chtask)
 
     itemlist_parser = subparsers.add_parser("list", help="list items")

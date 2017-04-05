@@ -3,6 +3,11 @@ import smtplib
 from email.mime.text import MIMEText
 import email.utils
 
+import base64
+import hashlib
+import random
+import time
+
 USE_MIME = False
 
 def send_mail(recipient_name, recipient_mail, blind_copy, subject, message):
@@ -12,6 +17,7 @@ def send_mail(recipient_name, recipient_mail, blind_copy, subject, message):
     sender = PUSHR_SETTINGS["sender_mail"]
     sender_full = PUSHR_SETTINGS["sender_name"] + " <" + PUSHR_SETTINGS["sender_mail"] + ">"
     recipient_full = recipient_name + " <" + recipient_mail + ">"
+    message_id = str(round(time.time()*10)) + "." + sha256(message) + "@" + PUSHR_SETTINGS["message_id_domain"]
 
     if USE_MIME:
         m = MIMEText(message.encode("utf-8"), _charset="utf-8")
@@ -19,9 +25,10 @@ def send_mail(recipient_name, recipient_mail, blind_copy, subject, message):
         m["From"] = sender_full
         m["Subject"] = subject
         m["Date"] = email.utils.formatdate()
+        m["Message-ID"] = message_id
         msg = m.as_string()
     else:
-        msg = "Date: {0}\nFrom: {1}\nTo: {2}\nSubject: {3}\n\n{4}".format(email.utils.formatdate(), sender_full, recipient_full, subject, message)
+        msg = "Date: {0}\nFrom: {1}\nMessage-ID: <{2}>\nTo: {3}\nSubject: {4}\n\n{5}".format(email.utils.formatdate(), sender_full, message_id, recipient_full, subject, message)
 
     smtp.sendmail(sender, recipient_mail, msg)
 
@@ -29,3 +36,9 @@ def send_mail(recipient_name, recipient_mail, blind_copy, subject, message):
         smtp.sendmail(sender, mail, msg)
 
     smtp.quit()
+
+def sha256(msg):
+    h = hashlib.sha256()
+    h.update(msg.encode("utf-8"))
+    d = h.digest()
+    return base64.b64encode(d).decode("utf-8")

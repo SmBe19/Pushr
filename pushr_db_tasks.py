@@ -1,6 +1,7 @@
 from pushr_settings import PUSHR_SETTINGS
 import sqlite3
 import os
+import datetime
 
 expression_get_new_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE sent_mails = 0 AND done = 0"
 expression_get_due_tasks = "SELECT slug, victim_name, victim_mail, name, due_date, sent_mails FROM tasks WHERE date(due_date) <= date('now') AND done = 0"
@@ -13,11 +14,14 @@ expression_insert_task = "INSERT INTO tasks (slug, victim_name, victim_mail, nam
 expression_add_sent_mail = "UPDATE tasks SET sent_mails = sent_mails + 1 WHERE slug = ?"
 expression_set_done = "UPDATE tasks SET done = 1 WHERE slug = ?"
 expression_set_undone = "UPDATE tasks SET done = 0 WHERE slug = ?"
+expression_set_due_date = "UPDATE tasks SET due_date = ? WHERE slug = ?"
 
 expression_add_admin = "INSERT INTO admins (mail) VALUES (?)"
 expression_remove_admin = "DELETE FROM admins WHERE mail = ?"
 expression_get_admin = "SELECT mail FROM admins WHERE mail = ?"
 expression_get_admins = "SELECT mail FROM admins"
+
+date_format = "%Y-%m-%d"
 
 class Task_DB:
 
@@ -38,6 +42,8 @@ class Task_DB:
         self.db.commit()
 
     def add_task(self, slug, victim_name, victim_mail, name, due_date):
+        if not self.check_date(due_date):
+            return False
         if self.get_task(slug) is not None:
             return False
         self.db.execute(expression_insert_task, (slug, victim_name, victim_mail, name, due_date))
@@ -45,16 +51,34 @@ class Task_DB:
         return True
 
     def add_sent_mail(self, slug):
+        if self.get_task(slug) is None:
+            return False
         self.db.execute(expression_add_sent_mail, (slug,))
         self.db.commit()
+        return True
 
     def set_done(self, slug):
+        if self.get_task(slug) is None:
+            return False
         self.db.execute(expression_set_done, (slug,))
         self.db.commit()
+        return True
 
     def set_undone(self, slug):
+        if self.get_task(slug) is None:
+            return False
         self.db.execute(expression_set_undone, (slug,))
         self.db.commit()
+        return True
+
+    def set_due_date(self, slug, due_date):
+        if not self.check_date(due_date):
+            return False
+        if self.get_task(slug) is None:
+            return False
+        self.db.execute(expression_set_due_date, (due_date, slug))
+        self.db.commit()
+        return True
 
     def get_tasks(self, expression):
         c = self.db.cursor()
@@ -121,3 +145,10 @@ class Task_DB:
 
     def create_task (self, slug, victim_name, victim_mail, name, due_date, sent_mails):
         return {"slug": slug, "victim_name": victim_name, "victim_mail": victim_mail, "name": name, "due_date": due_date, "sent_mails": sent_mails}
+
+    def check_date(self, date):
+        try:
+            datetime.datetime.strptime(date, date_format)
+        except ValueError:
+            return False
+        return True
