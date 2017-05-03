@@ -43,13 +43,19 @@ class Task_DB:
 
         self.db.commit()
 
+    def get_random_slug(self):
+        slug = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(PUSHR_SETTINGS["slug_length"]))
+        if self.get_task(slug) is not None:
+            return self.get_random_slug()
+        return slug
+
     def add_task(self, victim_name, victim_mail, name, due_date, slug=None):
         if not self.check_date(due_date):
             return False
+        if not slug:
+            slug = self.get_random_slug()
         if self.get_task(slug) is not None:
             return False
-        if not slug:
-            slug = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(PUSHR_SETTINGS["slug_length"]))
         self.db.execute(expression_insert_task, (slug, victim_name, victim_mail, name, due_date))
         self.db.commit()
         return True

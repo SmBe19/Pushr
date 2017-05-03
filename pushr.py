@@ -25,7 +25,7 @@ def admin(args):
 
 def addtask(args):
     db = Task_DB()
-    res = db.add_task(slug, args.victim_name, args.victim_mail, args.name, args.due_date)
+    res = db.add_task(args.victim_name, args.victim_mail, args.name, args.due_date)
     if not res:
         print("Task not added!")
 
