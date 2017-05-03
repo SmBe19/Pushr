@@ -17,6 +17,8 @@ expression_add_sent_mail = "UPDATE tasks SET sent_mails = sent_mails + 1 WHERE s
 expression_set_done = "UPDATE tasks SET done = 1 WHERE slug = ?"
 expression_set_undone = "UPDATE tasks SET done = 0 WHERE slug = ?"
 expression_set_due_date = "UPDATE tasks SET due_date = ? WHERE slug = ?"
+expression_set_victim_name = "UPDATE tasks SET victim_name = ? WHERE slug = ?"
+expression_set_victim_mail = "UPDATE tasks SET victim_mail = ? WHERE slug = ?"
 
 expression_add_admin = "INSERT INTO admins (mail) VALUES (?)"
 expression_remove_admin = "DELETE FROM admins WHERE mail = ?"
@@ -87,6 +89,20 @@ class Task_DB:
         if self.get_task(slug) is None:
             return False
         self.db.execute(expression_set_due_date, (due_date, slug))
+        self.db.commit()
+        return True
+
+    def set_victim_name(self, slug, victim_name):
+        if self.get_task(slug) is None:
+            return False
+        self.db.execute(expression_set_victim_name, (victim_name, slug))
+        self.db.commit()
+        return True
+
+    def set_victim_mail(self, slug, victim_mail):
+        if self.get_task(slug) is None:
+            return False
+        self.db.execute(expression_set_victim_mail, (victim_mail, slug))
         self.db.commit()
         return True
 

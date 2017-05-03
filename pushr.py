@@ -44,6 +44,18 @@ def chtask(args):
         else:
             if not db.set_due_date(args.slug, args.args[0]):
                 print("Invalid date or invalid slug")
+    elif action == "victim_name":
+        if len(args.args) != 1:
+            print("Expected exactly one argument: victim_name")
+        else:
+            if not db.set_victim_name(args.slug, args.args[0]):
+                print("Invalid date or invalid slug")
+    elif action == "victim_mail":
+        if len(args.args) != 1:
+            print("Expected exactly one argument: victim_mail")
+        else:
+            if not db.set_victim_mail(args.slug, args.args[0]):
+                print("Invalid date or invalid slug")
     else:
         print("unknown action '" + args.action + "'")
 
@@ -132,7 +144,7 @@ def main():
     task_parser.set_defaults(func=addtask)
 
     chtask_parser = subparsers.add_parser("chtask", help="task management")
-    chtask_parser.add_argument("action", help="action to perform (done / undone / due_date)")
+    chtask_parser.add_argument("action", help="action to perform (done / undone / due_date / victim_name / victim_mail)")
     chtask_parser.add_argument("slug", help="slug of task to perform action on")
     chtask_parser.add_argument("args", nargs="*", help="additional arguments")
     chtask_parser.set_defaults(func=chtask)
